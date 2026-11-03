@@ -1751,7 +1751,7 @@
 
     if-eqz v8, :cond_0
 
-    const/high16 v0, 0x8000000
+    const/high16 v0, 0xc000000
 
     invoke-static {p0, v9, v8, v0}, Landroid/app/PendingIntent;->getService(Landroid/content/Context;ILandroid/content/Intent;I)Landroid/app/PendingIntent;
 
@@ -2099,7 +2099,7 @@
 
     if-eqz v8, :cond_0
 
-    const/high16 v0, 0x8000000
+    const/high16 v0, 0xc000000
 
     invoke-static {p0, v9, v8, v0}, Landroid/app/PendingIntent;->getService(Landroid/content/Context;ILandroid/content/Intent;I)Landroid/app/PendingIntent;
 
