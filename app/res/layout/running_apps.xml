@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/imageView1" android:layout_width="fill_parent" android:layout_height="5.0dip" android:src="@drawable/shadeup" android:scaleType="fitXY" />
+    <HorizontalScrollView android:id="@id/recAppsSV" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/imageView1">
+        <LinearLayout android:orientation="horizontal" android:id="@id/recAppsLL" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    </HorizontalScrollView>
+    <TextView android:textColor="@color/ics_blue" android:gravity="center" android:id="@id/noRA" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="No Running Apps" android:layout_below="@id/imageView1" />
+</RelativeLayout>

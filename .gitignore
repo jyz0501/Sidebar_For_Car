@@ -1,0 +1,22 @@
+# ===== 构建中间产物 =====
+out/
+helperdex/
+dexmerge/
+unsigned*.apk
+aligned*.apk
+app/build/
+*.idsig
+
+# ===== 构建输出（APK 二进制不入仓，按需本地生成）=====
+dist/
+*.apk
+
+# ===== 自签名 keystore（密钥切勿入库）=====
+sign/release.keystore
+
+# ===== 系统 / 编辑器 =====
+.DS_Store
+*.pyc
+__pycache__/
+.idea/
+*.iml

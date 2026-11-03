@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/imageView1" android:background="#ff282828" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@id/appLeftShadow" android:layout_alignRight="@id/list" android:layout_alignParentTop="true" android:layout_alignParentBottom="true" />
+    <ImageView android:id="@id/appRightShadow" android:layout_width="5.0dip" android:layout_height="wrap_content" android:src="@drawable/shaderight" android:scaleType="fitXY" android:layout_alignParentTop="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" />
+    <ImageView android:id="@id/appLeftShadow" android:layout_width="5.0dip" android:layout_height="wrap_content" android:src="@drawable/shadeleft" android:scaleType="fitXY" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" android:layout_alignParentBottom="true" />
+    <ListView android:scrollbarStyle="insideOverlay" android:id="@id/list" android:layout_width="fill_parent" android:layout_height="40.0dip" android:layout_toLeftOf="@id/appRightShadow" android:layout_toRightOf="@id/appLeftShadow" android:layout_alignParentTop="true" android:layout_alignParentBottom="true" />
+    <ImageView android:id="@id/imageView3" android:layout_width="wrap_content" android:layout_height="5.0dip" android:src="@drawable/shadedown" android:scaleType="fitXY" android:layout_toLeftOf="@id/appRightShadow" android:layout_alignLeft="@id/imageView1" android:layout_alignTop="@id/list" />
+    <ProgressBar android:id="@id/pb" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerHorizontal="true" android:layout_centerVertical="true" />
+</RelativeLayout>

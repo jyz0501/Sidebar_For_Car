@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="window_icon">Window图标</string>
+    <string name="hide">隐藏</string>
+    <string name="close">关闭</string>
+    <string name="corner">Corner</string>
+    <string name="app_name">侧边栏</string>
+    <string name="settings">配置</string>
+</resources>
