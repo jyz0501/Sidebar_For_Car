@@ -89,6 +89,7 @@ sign_apk() {
     --ks "$KS" --ks-key-alias "$KS_ALIAS" \
     --ks-pass "pass:$KS_PASS" --key-pass "pass:$KS_PASS" \
     --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled false \
+    --v4-signing-enabled false \
     --out "$2" "$1"
 }
 sign_apk aligned.apk "$ROOT/dist/$OUT_NAME"
