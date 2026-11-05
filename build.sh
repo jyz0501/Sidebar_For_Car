@@ -71,18 +71,12 @@ if [ ! -f "$KS" ]; then
     -dname "CN=Siderbar For Car, OU=Dev, O=Qianxian, L=Shenzhen, ST=GD, C=CN"
 fi
 
-# ---- 构造格式化输出文件名（从 apktool.yml 取版本信息）----
+# ---- 构造输出文件名（应用名 + 版本号，不含安卓版本/签名信息）----
 VER=$(grep -oE 'versionName:[[:space:]]*\S+' app/apktool.yml | head -1 | sed 's/.*:[[:space:]]*//')
 VCODE=$(grep -oE 'versionCode:[[:space:]]*[0-9]+' app/apktool.yml | head -1 | grep -oE '[0-9]+')
-TSDK=$(grep -oE 'targetSdkVersion:[[:space:]]*[0-9]+' app/apktool.yml | head -1 | grep -oE '[0-9]+')
-case "$TSDK" in
-  30) ALABEL="android11";; 31) ALABEL="android12";;
-  33) ALABEL="android13";; 34) ALABEL="android14";;
-  *)  ALABEL="android$TSDK";;
-esac
-OUT_NAME="Siderbar_For_Car_v${VER}_${ALABEL}_v1v2-signed.apk"
-# 清理旧的中文命名产物与 adb 安装残留的 .idsig（均不入库），避免 dist/ 里残留多份
-rm -f "$ROOT/dist"/侧边栏*.apk "$ROOT/dist"/*.idsig
+OUT_NAME="Siderbar_For_Car_v${VER}.apk"
+# 清理旧命名产物与 adb 安装残留的 .idsig（均不入库），避免 dist/ 里残留多份
+rm -f "$ROOT/dist"/侧边栏*.apk "$ROOT/dist"/Siderbar_For_Car_v*_android*.apk "$ROOT/dist"/*.idsig
 
 sign_apk() {
   "$JAVA" -jar "$BT/lib/apksigner.jar" sign \
@@ -95,5 +89,5 @@ sign_apk() {
 sign_apk aligned.apk "$ROOT/dist/$OUT_NAME"
 
 "$JAVA" -jar "$BT/lib/apksigner.jar" verify -v "$ROOT/dist/$OUT_NAME" | grep -E "Verifies|v1 scheme|v2 scheme"
-echo "构建完成 -> $ROOT/dist/$OUT_NAME (versionName=$VER versionCode=$VCODE targetSdk=$TSDK 签名:V1+V2 自签名)"
+echo "构建完成 -> $ROOT/dist/$OUT_NAME (versionName=$VER versionCode=$VCODE 签名:V1+V2 自签名)"
 
