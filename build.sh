@@ -39,7 +39,7 @@ mkdir -p out helperdex dexmerge "$ROOT/dist"
 
 # 1. 编译兼容层（Java 8，兼容 minSdk 21）
 "$JAVAC" -nowarn -source 8 -target 8 -bootclasspath "$ANDROID_JAR" \
-  -d out src/com/qianxian/siderbar/*.java
+  -d out src/com/qianxian/Sidebar/*.java
 
 # 2. 兼容层 -> classes.dex
 "$JAVA" -cp "$BT/lib/d8.jar" com.android.tools.r8.D8 \

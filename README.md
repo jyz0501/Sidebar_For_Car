@@ -12,9 +12,9 @@ Siderbar_For_Car/
 │   ├── AndroidManifest.xml
 │   ├── apktool.yml
 │   ├── res/                  # 资源（布局 / 图片 / 动画 / 字符串）
-│   └── smali/                # 反编译字节码（含 com.qianxian.siderbar 与底层浮窗库 com.hzsoft.standout）
+│   └── smali/                # 反编译字节码（含 com.qianxian.Sidebar 与底层浮窗库 com.hzsoft.standout）
 ├── src/                      # 注入的 Java 兼容层源码（编译后合并进 classes.dex）
-│   └── com/qianxian/siderbar/
+│   └── com/qianxian/Sidebar/
 │       ├── Compat.java           # 悬浮窗类型 / 前台服务 / 通知 / 权限兼容
 │       ├── ConfigReceiver.java   # adb 批量导出/导入配置（Broadcast）
 │       └── ConfigTransferActivity.java # 配置迁移（SAF，无 DocumentsUI 时回退）
@@ -25,7 +25,7 @@ Siderbar_For_Car/
 
 ## 适配要点（相对原版）
 
-- **包名** 改为 `com.qianxian.siderbar`。
+- **包名** 改为 `com.qianxian.Sidebar`。
 - **Android 11 兼容**：`TYPE_APPLICATION_OVERLAY` 悬浮窗类型、前台服务 + 通知渠道、`WRITE_SETTINGS` 走系统设置页、包可见性 `<queries>`。
 - **权限收敛**：仅保留必要权限（悬浮窗、修改系统设置、前台服务、开机自启、振动、Wi-Fi、清理进程）；移除了 `CAMERA` 与 `GET_TASKS`。不再启动即自动弹权限页，由用户在系统设置中手动授予。
 - **去引导层**：去掉原版启动时的操作引导浮层，打开直接进入设置页。
@@ -65,7 +65,7 @@ chmod +x build.sh
 
 ```bash
 adb install -r dist/Siderbar_For_Car_v1.1.apk
-adb shell am start -n com.qianxian.siderbar/.MainActivity
+adb shell am start -n com.qianxian.Sidebar/.MainActivity
 ```
 
 首次使用需在系统「设置 → 应用 → 侧边栏」中手动授予 **悬浮窗（在其他应用上层显示）** 与 **修改系统设置** 权限，否则悬浮窗会静默不显示。
