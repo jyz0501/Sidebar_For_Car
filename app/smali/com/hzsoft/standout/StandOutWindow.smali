@@ -118,7 +118,7 @@
 
     move-result-object v0
 
-    invoke-static {p0, v0}, Lcom/qianxian/Sidebar/Compat;->startServiceCompat(Landroid/content/Context;Landroid/content/Intent;)V
+    invoke-static {p0, v0}, Lcom/qianxian/sidebar/Compat;->startServiceCompat(Landroid/content/Context;Landroid/content/Intent;)V
 
     return-void
 .end method
@@ -216,7 +216,7 @@
 
     move-result-object v0
 
-    invoke-static {p0, v0}, Lcom/qianxian/Sidebar/Compat;->startServiceCompat(Landroid/content/Context;Landroid/content/Intent;)V
+    invoke-static {p0, v0}, Lcom/qianxian/sidebar/Compat;->startServiceCompat(Landroid/content/Context;Landroid/content/Intent;)V
 
     return-void
 .end method
@@ -228,7 +228,7 @@
 
     move-result-object v0
 
-    invoke-static {p0, v0}, Lcom/qianxian/Sidebar/Compat;->startServiceCompat(Landroid/content/Context;Landroid/content/Intent;)V
+    invoke-static {p0, v0}, Lcom/qianxian/sidebar/Compat;->startServiceCompat(Landroid/content/Context;Landroid/content/Intent;)V
 
     return-void
 .end method
@@ -1758,7 +1758,7 @@
     move-result-object v0
 
     :cond_0
-    invoke-static {p0, v1, v5, v6, v0}, Lcom/qianxian/Sidebar/Compat;->buildNotification(Landroid/content/Context;ILjava/lang/CharSequence;Ljava/lang/CharSequence;Landroid/app/PendingIntent;)Landroid/app/Notification;
+    invoke-static {p0, v1, v5, v6, v0}, Lcom/qianxian/sidebar/Compat;->buildNotification(Landroid/content/Context;ILjava/lang/CharSequence;Ljava/lang/CharSequence;Landroid/app/PendingIntent;)Landroid/app/Notification;
 
     move-result-object v8
 
@@ -1822,7 +1822,7 @@
 
     invoke-super {p0}, Landroid/app/Service;->onCreate()V
 
-    invoke-static {p0}, Lcom/qianxian/Sidebar/Compat;->ensureForeground(Landroid/app/Service;)V
+    invoke-static {p0}, Lcom/qianxian/sidebar/Compat;->ensureForeground(Landroid/app/Service;)V
 
     const-string v0, "window"
 
@@ -2106,7 +2106,7 @@
     move-result-object v0
 
     :cond_0
-    invoke-static {p0, v1, v5, v6, v0}, Lcom/qianxian/Sidebar/Compat;->buildNotification(Landroid/content/Context;ILjava/lang/CharSequence;Ljava/lang/CharSequence;Landroid/app/PendingIntent;)Landroid/app/Notification;
+    invoke-static {p0, v1, v5, v6, v0}, Lcom/qianxian/sidebar/Compat;->buildNotification(Landroid/content/Context;ILjava/lang/CharSequence;Ljava/lang/CharSequence;Landroid/app/PendingIntent;)Landroid/app/Notification;
 
     move-result-object v8
 

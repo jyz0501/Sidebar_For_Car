@@ -1,0 +1,60 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main, master]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install SDK packages
+        run: sdkmanager --install "platforms;android-30" "build-tools;36.0.0"
+
+      - name: Download apktool
+        run: |
+          mkdir -p tools
+          curl -fsSL -o tools/apktool.jar \
+            https://github.com/iBotPeaches/Apktool/releases/download/v2.12.1/apktool_2.12.1.jar
+
+      - name: Restore keystore (optional secret)
+        env:
+          KS_B64: ${{ secrets.SIDEBAR_KEYSTORE_BASE64 }}
+        if: env.KS_B64 != ''
+        run: |
+          mkdir -p sign
+          echo "$KS_B64" | base64 -d > sign/release.keystore
+
+      - name: Build
+        env:
+          APKTOOL: ${{ github.workspace }}/tools/apktool.jar
+        run: |
+          chmod +x build.sh
+          ./build.sh
+
+      - name: Verify signature
+        run: |
+          BT="$ANDROID_HOME/build-tools/36.0.0"
+          "$BT/apksigner" verify -v dist/Sidebar_For_Car_v*.apk | grep -E "Verifies|v1 scheme|v2 scheme"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sidebar_For_Car-apk
+          path: dist/*.apk
+          if-no-files-found: error

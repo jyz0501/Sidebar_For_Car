@@ -15,7 +15,10 @@ JAVAC="${JAVAC:-/usr/bin/javac}"
 # apktool：优先使用 Homebrew 安装的 jar（直接用系统 java 调用，避免 brew 包装脚本依赖缺失的 openjdk）
 # 也可通过环境变量 APKTOOL 指定（命令或 jar 路径均可）
 if [ -n "${APKTOOL:-}" ]; then
-  APK_CMD=("$APKTOOL")
+  case "$APKTOOL" in
+    *.jar) APK_CMD=("$JAVA" -jar "$APKTOOL") ;;
+    *)     APK_CMD=("$APKTOOL") ;;
+  esac
 else
   APK_JAR="$(ls /opt/homebrew/Cellar/apktool/*/libexec/apktool_*.jar 2>/dev/null | head -1)"
   if [ -n "$APK_JAR" ]; then
@@ -39,7 +42,7 @@ mkdir -p out helperdex dexmerge "$ROOT/dist"
 
 # 1. 编译兼容层（Java 8，兼容 minSdk 21）
 "$JAVAC" -nowarn -source 8 -target 8 -bootclasspath "$ANDROID_JAR" \
-  -d out src/com/qianxian/Sidebar/*.java
+  -d out src/com/qianxian/sidebar/*.java
 
 # 2. 兼容层 -> classes.dex
 "$JAVA" -cp "$BT/lib/d8.jar" com.android.tools.r8.D8 \
@@ -68,15 +71,15 @@ if [ ! -f "$KS" ]; then
   mkdir -p "$(dirname "$KS")"
   keytool -genkeypair -v -keystore "$KS" -keyalg RSA -keysize 2048 -validity 10000 \
     -alias "$KS_ALIAS" -storepass "$KS_PASS" -keypass "$KS_PASS" \
-    -dname "CN=Siderbar For Car, OU=Dev, O=Qianxian, L=Shenzhen, ST=GD, C=CN"
+    -dname "CN=Sidebar For Car, OU=Dev, O=Qianxian, L=Shenzhen, ST=GD, C=CN"
 fi
 
 # ---- 构造输出文件名（应用名 + 版本号，不含安卓版本/签名信息）----
 VER=$(grep -oE 'versionName:[[:space:]]*\S+' app/apktool.yml | head -1 | sed 's/.*:[[:space:]]*//')
 VCODE=$(grep -oE 'versionCode:[[:space:]]*[0-9]+' app/apktool.yml | head -1 | grep -oE '[0-9]+')
-OUT_NAME="Siderbar_For_Car_v${VER}.apk"
+OUT_NAME="Sidebar_For_Car_v${VER}.apk"
 # 清理旧命名产物与 adb 安装残留的 .idsig（均不入库），避免 dist/ 里残留多份
-rm -f "$ROOT/dist"/侧边栏*.apk "$ROOT/dist"/Siderbar_For_Car_v*_android*.apk "$ROOT/dist"/*.idsig
+rm -f "$ROOT/dist"/侧边栏*.apk "$ROOT/dist"/Siderbar_For_Car_v*.apk "$ROOT/dist"/Siderbar_For_Car_v*_android*.apk "$ROOT/dist"/*.idsig
 
 sign_apk() {
   "$JAVA" -jar "$BT/lib/apksigner.jar" sign \
