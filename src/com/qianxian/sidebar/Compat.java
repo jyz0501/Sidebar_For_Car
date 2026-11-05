@@ -217,7 +217,106 @@ public final class Compat {
 
     /* ---------------- 配置导出 / 导入 ---------------- */
 
-    private static final String CONFIG_FILE_NAME = "sidebar_config.xml";
+    public static final String CONFIG_FILE_NAME = "sidebar_config.xml";
+
+    /** 设备公共 Download 目录 */
+    public static java.io.File downloadDir() {
+        return android.os.Environment.getExternalStoragePublicDirectory(
+                android.os.Environment.DIRECTORY_DOWNLOADS);
+    }
+
+    /**
+     * 导出配置到设备 Download 目录（/sdcard/Download/sidebar_config.xml）。
+     * API 29+ 走 MediaStore（无需存储权限，会先清理旧的同名条目）；
+     * 旧版本直接写文件路径（需 WRITE_EXTERNAL_STORAGE）。
+     *
+     * @return 实际写入路径；失败返回 null
+     */
+    public static String exportToDownload(Context c, byte[] data) {
+        if (Build.VERSION.SDK_INT >= 29) {
+            try {
+                android.content.ContentResolver cr = c.getContentResolver();
+                Uri downloads = android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI;
+                // 删除旧的同名条目，避免 Download 里堆积 sidebar_config (1).xml
+                android.database.Cursor cur = cr.query(downloads,
+                        new String[]{android.provider.MediaStore.MediaColumns._ID},
+                        android.provider.MediaStore.MediaColumns.DISPLAY_NAME + "=?",
+                        new String[]{CONFIG_FILE_NAME}, null);
+                if (cur != null) {
+                    while (cur.moveToNext()) {
+                        Uri u = android.content.ContentUris.withAppendedId(downloads, cur.getLong(0));
+                        try {
+                            cr.delete(u, null, null);
+                        } catch (Throwable ignored) {
+                        }
+                    }
+                    cur.close();
+                }
+                android.content.ContentValues cv = new android.content.ContentValues();
+                cv.put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, CONFIG_FILE_NAME);
+                cv.put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "text/xml");
+                Uri uri = cr.insert(downloads, cv);
+                if (uri == null) {
+                    return null;
+                }
+                java.io.OutputStream os = cr.openOutputStream(uri);
+                os.write(data);
+                os.close();
+                return "/sdcard/Download/" + CONFIG_FILE_NAME;
+            } catch (Throwable t) {
+                t.printStackTrace();
+                return null;
+            }
+        }
+        // API < 29：直接写公共 Download 目录
+        try {
+            java.io.File f = new java.io.File(downloadDir(), CONFIG_FILE_NAME);
+            java.io.FileOutputStream fos = new java.io.FileOutputStream(f);
+            fos.write(data);
+            fos.close();
+            return f.getAbsolutePath();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 打开 Download 目录下的配置文件；不存在或不可读返回 null。
+     * API 29+ 从 MediaStore 读取，旧版本直接读文件路径。
+     */
+    public static java.io.InputStream openDownloadConfig(Context c) {
+        if (Build.VERSION.SDK_INT >= 29) {
+            try {
+                android.content.ContentResolver cr = c.getContentResolver();
+                Uri downloads = android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI;
+                android.database.Cursor cur = cr.query(downloads,
+                        new String[]{android.provider.MediaStore.MediaColumns._ID},
+                        android.provider.MediaStore.MediaColumns.DISPLAY_NAME + "=?",
+                        new String[]{CONFIG_FILE_NAME}, null);
+                if (cur == null) {
+                    return null;
+                }
+                java.io.InputStream in = null;
+                if (cur.moveToFirst()) {
+                    Uri u = android.content.ContentUris.withAppendedId(downloads, cur.getLong(0));
+                    in = cr.openInputStream(u);
+                }
+                cur.close();
+                return in;
+            } catch (Throwable t) {
+                t.printStackTrace();
+                return null;
+            }
+        }
+        try {
+            java.io.File f = new java.io.File(downloadDir(), CONFIG_FILE_NAME);
+            return f.exists() ? new java.io.FileInputStream(f) : null;
+        } catch (Throwable t) {
+            t.printStackTrace();
+            return null;
+        }
+    }
 
     /** 设置页「导出配置」按钮 */
     public static void exportConfig(Activity a) {
@@ -241,8 +340,8 @@ public final class Compat {
     }
 
     /**
-     * 默认配置文件：/sdcard/Android/data/包名/files/sidebar_config.xml
-     * 应用私有外部目录，读写不需要任何存储权限，adb 与文件管理器都能访问。
+     * 备份配置文件：/sdcard/Android/data/包名/files/sidebar_config.xml
+     * 应用私有外部目录，读写不需要任何存储权限。Download 目录写入失败时的兜底位置。
      */
     public static java.io.File configFile(Context c) {
         java.io.File dir = c.getExternalFilesDir(null);

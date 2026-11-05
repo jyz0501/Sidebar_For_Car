@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
@@ -18,26 +17,41 @@ import java.io.InputStream;
  * adb shell am broadcast -n com.qianxian.sidebar/.ConfigReceiver --es mode import
  * </pre>
  *
- * 文件固定为 /sdcard/Android/data/com.qianxian.sidebar/files/sidebar_config.xml
+ * 配置文件位于设备 Download 目录：/sdcard/Download/sidebar_config.xml
+ * （Download 写入不可用时回退应用私有目录 /sdcard/Android/data/com.qianxian.sidebar/files/）
  */
 public class ConfigReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context c, Intent i) {
         String mode = i.getStringExtra("mode");
-        File f = Compat.configFile(c);
         try {
             if ("import".equals(mode)) {
-                InputStream is = new FileInputStream(f);
+                InputStream is = Compat.openDownloadConfig(c);
+                String src = "/sdcard/Download/" + Compat.CONFIG_FILE_NAME;
+                if (is == null) {
+                    File f = Compat.configFile(c);
+                    if (!f.exists()) {
+                        toast(c, "未找到配置文件：" + src);
+                        return;
+                    }
+                    is = new java.io.FileInputStream(f);
+                    src = f.getAbsolutePath();
+                }
                 int n = Compat.restoreConfig(c, is);
                 is.close();
-                toast(c, "已导入 " + n + " 项配置：" + f.getAbsolutePath());
+                toast(c, "已从 " + src + " 导入 " + n + " 项配置");
             } else {
                 byte[] data = Compat.dumpConfig(c);
-                FileOutputStream fos = new FileOutputStream(f);
-                fos.write(data);
-                fos.close();
-                toast(c, "已导出：" + f.getAbsolutePath());
+                String path = Compat.exportToDownload(c, data);
+                if (path == null) {
+                    File f = Compat.configFile(c);
+                    FileOutputStream fos = new FileOutputStream(f);
+                    fos.write(data);
+                    fos.close();
+                    path = f.getAbsolutePath();
+                }
+                toast(c, "已导出：" + path);
             }
         } catch (Throwable t) {
             t.printStackTrace();

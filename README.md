@@ -29,7 +29,7 @@ Sidebar_For_Car/
 
 - **包名** 改为 `com.qianxian.sidebar`。
 - **Android 11 兼容**：`TYPE_APPLICATION_OVERLAY` 悬浮窗类型、前台服务 + 通知渠道、`WRITE_SETTINGS` 走系统设置页、包可见性 `<queries>`。
-- **权限收敛**：仅保留必要权限（悬浮窗、修改系统设置、前台服务、开机自启、振动、Wi-Fi、清理进程）；移除了 `CAMERA` 与 `GET_TASKS`。不再启动即自动弹权限页，由用户在系统设置中手动授予。
+- **权限收敛**：仅保留必要权限（悬浮窗、修改系统设置、前台服务、开机自启、振动、Wi-Fi、清理进程、存储写入仅限旧系统用于 Download 目录）；移除了 `CAMERA` 与 `GET_TASKS`。不再启动即自动弹权限页，由用户在系统设置中手动授予。
 - **去引导层**：去掉原版启动时的操作引导浮层，打开直接进入设置页。
 
 ## 构建
@@ -59,7 +59,7 @@ chmod +x build.sh
 5. `zipalign` 对齐；
 6. **自签名**：若 `sign/release.keystore` 不存在则调用 `keytool` 自动生成（别名 `siderbar`，有效期 10000 天），并以 V1+V2 签名（关闭 V3）。
 
-产物：`dist/Sidebar_For_Car_v1.2_b3.apk`（文件名格式为 `应用名_v{versionName}_b{versionCode}.apk`，由 `build.sh` 自动生成）。
+产物：`dist/Sidebar_For_Car_v1.2.1_b4.apk`（文件名格式为 `应用名_v{versionName}_b{versionCode}.apk`，由 `build.sh` 自动生成）。
 
 > 自签名证书仅用于调试/内部分发。正式发布请替换为自有密钥，并妥善保管 `sign/release.keystore`（已加入 `.gitignore`，不会进入版本库）。
 
@@ -78,7 +78,7 @@ chmod +x build.sh
 ## 安装与权限
 
 ```bash
-adb install -r dist/Sidebar_For_Car_v1.2_b3.apk
+adb install -r dist/Sidebar_For_Car_v1.2.1_b4.apk
 adb shell am start -n com.qianxian.sidebar/.MainActivity
 ```
 
@@ -86,4 +86,4 @@ adb shell am start -n com.qianxian.sidebar/.MainActivity
 
 ## 版本
 
-- `versionName: 1.2`，`versionCode: 3`，`minSdk 23`，`targetSdk 30`。
+- `versionName: 1.2.1`，`versionCode: 4`，`minSdk 23`，`targetSdk 30`。
