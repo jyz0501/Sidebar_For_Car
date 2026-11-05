@@ -59,7 +59,7 @@ chmod +x build.sh
 5. `zipalign` 对齐；
 6. **自签名**：若 `sign/release.keystore` 不存在则调用 `keytool` 自动生成（别名 `siderbar`，有效期 10000 天），并以 V1+V2 签名（关闭 V3）。
 
-产物：`dist/Sidebar_For_Car_v1.1.apk`（文件名仅为应用名 + 版本号，由 `build.sh` 自动生成）。
+产物：`dist/Sidebar_For_Car_v1.2_b3.apk`（文件名格式为 `应用名_v{versionName}_b{versionCode}.apk`，由 `build.sh` 自动生成）。
 
 > 自签名证书仅用于调试/内部分发。正式发布请替换为自有密钥，并妥善保管 `sign/release.keystore`（已加入 `.gitignore`，不会进入版本库）。
 
@@ -78,7 +78,7 @@ chmod +x build.sh
 ## 安装与权限
 
 ```bash
-adb install -r dist/Sidebar_For_Car_v1.1.apk
+adb install -r dist/Sidebar_For_Car_v1.2_b3.apk
 adb shell am start -n com.qianxian.sidebar/.MainActivity
 ```
 
@@ -86,4 +86,4 @@ adb shell am start -n com.qianxian.sidebar/.MainActivity
 
 ## 版本
 
-- `versionName: 1.1`，`versionCode: 2`，`minSdk 23`，`targetSdk 30`。
+- `versionName: 1.2`，`versionCode: 3`，`minSdk 23`，`targetSdk 30`。

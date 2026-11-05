@@ -77,9 +77,9 @@ fi
 # ---- 构造输出文件名（应用名 + 版本号，不含安卓版本/签名信息）----
 VER=$(grep -oE 'versionName:[[:space:]]*\S+' app/apktool.yml | head -1 | sed 's/.*:[[:space:]]*//')
 VCODE=$(grep -oE 'versionCode:[[:space:]]*[0-9]+' app/apktool.yml | head -1 | grep -oE '[0-9]+')
-OUT_NAME="Sidebar_For_Car_v${VER}.apk"
+OUT_NAME="Sidebar_For_Car_v${VER}_b${VCODE}.apk"
 # 清理旧命名产物与 adb 安装残留的 .idsig（均不入库），避免 dist/ 里残留多份
-rm -f "$ROOT/dist"/侧边栏*.apk "$ROOT/dist"/Siderbar_For_Car_v*.apk "$ROOT/dist"/Siderbar_For_Car_v*_android*.apk "$ROOT/dist"/*.idsig
+rm -f "$ROOT/dist"/侧边栏*.apk "$ROOT/dist"/Siderbar_For_Car_v*.apk "$ROOT/dist"/Sidebar_For_Car_v*.apk "$ROOT/dist"/*.idsig
 
 sign_apk() {
   "$JAVA" -jar "$BT/lib/apksigner.jar" sign \
